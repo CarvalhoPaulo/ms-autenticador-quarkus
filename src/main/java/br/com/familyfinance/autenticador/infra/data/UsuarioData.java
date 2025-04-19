@@ -22,7 +22,7 @@ public class UsuarioData extends PanacheEntityBase {
     private String email;
 
     @Column(name = "senha")
-    private String hashSenha;
+    private String senha;
 
     @Column(name = "ativo")
     private Boolean ativo = true;

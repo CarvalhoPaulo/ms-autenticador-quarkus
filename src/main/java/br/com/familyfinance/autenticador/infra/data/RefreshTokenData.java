@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class RefreshTokenData extends PanacheEntityBase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -24,8 +25,12 @@ public class RefreshTokenData extends PanacheEntityBase {
     @JoinColumn(name = "id_usuario")
     private UsuarioData usuario;
 
-    @Column(name = "expiracao")
+    @Column(name = "dataHoraCriacao")
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime expiracao;
+    private LocalDateTime dataHoraCriacao;
+
+    @Column(name = "dataHoraExpiracao")
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime dataHoraExpiracao;
 
 }
