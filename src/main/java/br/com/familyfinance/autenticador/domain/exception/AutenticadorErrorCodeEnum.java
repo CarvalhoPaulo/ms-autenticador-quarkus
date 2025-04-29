@@ -1,11 +1,11 @@
 package br.com.familyfinance.autenticador.domain.exception;
 
-import br.com.familyfinance.arquitetura.domain.exception.ErrorCode;
+import br.com.familyfinance.arquitetura.domain.exception.BusinessErrorCode;
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 
 @Getter
-public enum AutenticadorErrorCodeEnum implements ErrorCode {
+public enum AutenticadorErrorCodeEnum implements BusinessErrorCode {
 
     CREDENCIAIS_INVALIDAS("ATT0001", "Usuário e/ou senha inválidos.");
 
