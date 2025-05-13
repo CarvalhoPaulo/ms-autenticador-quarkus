@@ -22,14 +22,14 @@ public class RefreshTokenData extends PanacheEntityBase {
     private String token;
 
     @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario")
-    private UsuarioData usuario;
+    @JoinColumn(name = "user_id")
+    private UserData user;
 
-    @Column(name = "dataHoraCriacao")
+    @Column(name = "creationDateTime")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dataHoraCriacao;
 
-    @Column(name = "dataHoraExpiracao")
+    @Column(name = "expirationDateTime")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dataHoraExpiracao;
 

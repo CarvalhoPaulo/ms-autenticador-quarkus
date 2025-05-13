@@ -2,8 +2,12 @@ package br.com.familyfinance.autenticador.domain.service;
 
 import br.com.familyfinance.autenticador.application.dto.LoginDTO;
 import br.com.familyfinance.autenticador.application.dto.TokenDTO;
+import br.com.familyfinance.autenticador.domain.exception.InvalidEmailException;
+import br.com.familyfinance.autenticador.domain.exception.InvalidFullNameException;
+import br.com.familyfinance.autenticador.domain.exception.InvalidPasswordlException;
+import br.com.familyfinance.autenticador.domain.exception.InvalidUsernameException;
 import br.com.familyfinance.autenticador.domain.model.RefreshToken;
-import br.com.familyfinance.autenticador.domain.model.Usuario;
+import br.com.familyfinance.autenticador.domain.model.User;
 import br.com.familyfinance.autenticador.domain.service.impl.AuthServiceImpl;
 import br.com.familyfinance.autenticador.shared.utils.JwtUtil;
 import io.quarkus.elytron.security.common.BcryptUtil;
@@ -51,29 +55,32 @@ class AuthServiceTest {
     }
 
     @Test
-    void deveAutenticarUsuarioComSucesso() {
+    void deveAutenticarUsuarioComSucesso() throws InvalidPasswordlException, InvalidUsernameException, InvalidFullNameException, InvalidEmailException {
         // Arrange
-        String email = "usuario@teste.com";
-        String senha = "senha123";
-        String senhaHash = BcryptUtil.bcryptHash(senha);
+        String email = "usuario.teste@email.com";
+        String username = "usuario.teste";
+        String senha = "Senha@123";
+        String name = "Nome Completo";
 
-        Usuario usuario = Usuario.builder()
+        User user = User.builder()
                 .id(1L)
+                .name(name)
                 .email(email)
-                .senha(senhaHash)
+                .username(username)
+                .plainPassword(senha)
                 .build();
 
-        RefreshToken refreshToken = RefreshToken.create(usuario);
+        RefreshToken refreshToken = RefreshToken.create(user);
 
-        when(usuarioService.buscarPorEmail(email))
-                .thenReturn(Uni.createFrom().item(usuario));
-        when(refreshTokenService.createRefreshToken(usuario))
+        when(usuarioService.findByUsername(username))
+                .thenReturn(Uni.createFrom().item(user));
+        when(refreshTokenService.createRefreshToken(user))
                 .thenReturn(Uni.createFrom().item(refreshToken));
 
         // Act
         Uni<TokenDTO> resultado = authService.login(LoginDTO.builder()
-                .email(email)
-                .senha(senha)
+                .username(username)
+                .password(senha)
                 .build());
 
         // Assert
@@ -83,7 +90,7 @@ class AuthServiceTest {
             assertNotNull(response.getRefreshToken());
         });
 
-        verify(usuarioService).buscarPorEmail(email);
-        verify(refreshTokenService).createRefreshToken(usuario);
+        verify(usuarioService).findByUsername(username);
+        verify(refreshTokenService).createRefreshToken(user);
     }
 }

@@ -3,7 +3,7 @@ package br.com.familyfinance.autenticador.domain.service.impl;
 import br.com.familyfinance.autenticador.domain.exception.RefreshTokenExpiradoException;
 import br.com.familyfinance.autenticador.domain.exception.RefreshTokenNaoEncontradoException;
 import br.com.familyfinance.autenticador.domain.model.RefreshToken;
-import br.com.familyfinance.autenticador.domain.model.Usuario;
+import br.com.familyfinance.autenticador.domain.model.User;
 import br.com.familyfinance.autenticador.domain.repository.RefreshTokenRepository;
 import br.com.familyfinance.autenticador.domain.service.RefreshTokenService;
 import io.smallrye.mutiny.Uni;
@@ -21,20 +21,20 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     RefreshTokenRepository repository;
 
     @Override
-    public Uni<RefreshToken> createRefreshToken(Usuario usuario) {
+    public Uni<RefreshToken> createRefreshToken(User usuario) {
         return repository.inserir(getNovoRefreshToken(usuario));
     }
 
     @Override
     @Transactional
     public Uni<RefreshToken> updateRefreshToken(String token) {
-        return repository.buscarPorToken(token)
+        return repository.findByToken(token)
                 .onItem()
                 .ifNull()
                 .failWith(new RefreshTokenNaoEncontradoException())
                 .onItem().ifNotNull()
                 .transform(Unchecked.function(refreshToken -> {
-                    if (refreshToken.getDataHoraExpiracao().isBefore(LocalDateTime.now())) {
+                    if (refreshToken.getExpirationDateTime().isBefore(LocalDateTime.now())) {
                         throw new RefreshTokenExpiradoException();
                     }
                     return refreshToken;
@@ -46,7 +46,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 });
     }
 
-    private static RefreshToken getNovoRefreshToken(Usuario usuario) {
+    private static RefreshToken getNovoRefreshToken(User usuario) {
         return RefreshToken.create(usuario);
     }
 }

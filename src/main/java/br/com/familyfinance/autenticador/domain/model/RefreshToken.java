@@ -1,6 +1,6 @@
 package br.com.familyfinance.autenticador.domain.model;
 
-import br.com.familyfinance.arquitetura.domain.model.Model;
+import br.dev.paulocarvalho.arquitetura.domain.model.Model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,16 +18,16 @@ public class RefreshToken implements Model<Long> {
 
     private Long id;
     private String token;
-    private Usuario usuario;
-    private LocalDateTime dataHoraCriacao;
-    private LocalDateTime dataHoraExpiracao;
+    private User user;
+    private LocalDateTime creationDateTime;
+    private LocalDateTime expirationDateTime;
 
-    public static RefreshToken create(Usuario usuario) {
+    public static RefreshToken create(User user) {
         return RefreshToken.builder()
-                .usuario(usuario)
+                .user(user)
                 .token(UUID.randomUUID().toString())
-                .dataHoraExpiracao(LocalDateTime.now().plusMinutes(MAX_AGE_MINUTES))
-                .dataHoraCriacao(LocalDateTime.now())
+                .expirationDateTime(LocalDateTime.now().plusMinutes(MAX_AGE_MINUTES))
+                .creationDateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -37,6 +37,6 @@ public class RefreshToken implements Model<Long> {
 
     public void renovarToken() {
         this.token = UUID.randomUUID().toString();
-        this.dataHoraExpiracao = LocalDateTime.now().plusMinutes(RefreshToken.MAX_AGE_MINUTES);
+        this.expirationDateTime = LocalDateTime.now().plusMinutes(RefreshToken.MAX_AGE_MINUTES);
     }
 }

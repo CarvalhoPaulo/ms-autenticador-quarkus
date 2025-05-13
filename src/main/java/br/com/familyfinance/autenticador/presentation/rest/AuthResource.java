@@ -2,12 +2,12 @@ package br.com.familyfinance.autenticador.presentation.rest;
 
 import br.com.familyfinance.arquitetura.application.dto.MetaDTO;
 import br.com.familyfinance.arquitetura.application.dto.ResponseDTO;
-import br.com.familyfinance.arquitetura.application.exception.ApplicationErrorCodeEnum;
-import br.com.familyfinance.arquitetura.application.exception.ApplicationException;
-import br.com.familyfinance.arquitetura.domain.exception.BusinessException;
 import br.com.familyfinance.autenticador.application.dto.LoginDTO;
 import br.com.familyfinance.autenticador.application.dto.TokenDTO;
 import br.com.familyfinance.autenticador.domain.service.AuthService;
+import br.dev.paulocarvalho.arquitetura.application.exception.ApplicationErrorCodeEnum;
+import br.dev.paulocarvalho.arquitetura.application.exception.ApplicationException;
+import br.dev.paulocarvalho.arquitetura.domain.exception.BusinessException;
 import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.http.Cookie;

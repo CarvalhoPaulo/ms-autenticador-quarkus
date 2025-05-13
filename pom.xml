@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.com.familyfinance</groupId>
-    <artifactId>ms-autenticador</artifactId>
+    <artifactId>lib-autenticador-quarkus</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -102,8 +102,13 @@
             <version>${org.mapstruct.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.17.0</version>
+        </dependency>
+        <dependency>
             <groupId>br.com.familyfinance</groupId>
-            <artifactId>ms-arquitetura</artifactId>
+            <artifactId>lib-arquitetura-quarkus</artifactId>
             <version>${ms-arquitetura.version}</version>
         </dependency>
 

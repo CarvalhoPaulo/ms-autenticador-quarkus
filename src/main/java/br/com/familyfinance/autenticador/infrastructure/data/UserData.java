@@ -6,24 +6,28 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "user")
 @Getter
 @Setter
-public class UsuarioData extends PanacheEntityBase {
+public class UserData extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nome")
-    private String nome;
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "email")
     private String email;
 
-    @Column(name = "senha")
-    private String senha;
+    @Column(name = "password")
+    private String password;
 
-    @Column(name = "ativo")
-    private Boolean ativo = true;
+    @Column(name = "active")
+    private Boolean active = true;
+
 }

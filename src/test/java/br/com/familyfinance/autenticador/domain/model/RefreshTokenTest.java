@@ -1,5 +1,9 @@
 package br.com.familyfinance.autenticador.domain.model;
 
+import br.com.familyfinance.autenticador.domain.exception.InvalidEmailException;
+import br.com.familyfinance.autenticador.domain.exception.InvalidFullNameException;
+import br.com.familyfinance.autenticador.domain.exception.InvalidPasswordlException;
+import br.com.familyfinance.autenticador.domain.exception.InvalidUsernameException;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,56 +11,63 @@ import static org.junit.jupiter.api.Assertions.*;
 class RefreshTokenTest {
 
     @Test
-    void deveCriarRefreshTokenComSucesso() {
+    void deveCriarRefreshTokenComSucesso() throws InvalidPasswordlException, InvalidUsernameException, InvalidFullNameException, InvalidEmailException {
         // Arrange
-        Usuario usuario = Usuario.builder()
+        User user = User.builder()
                 .id(1L)
-                .nome("João Silva")
-                .email("joao@email.com")
-                .senha("senha123")
+                .username("joao.silva")
+                .email("joao.silva@email.com")
+                .plainPassword("Senha@123")
+                .name("João Silva")
                 .build();
 
         // Act
-        RefreshToken refreshToken = RefreshToken.create(usuario);
+        RefreshToken refreshToken = RefreshToken.create(user);
 
         // Assert
         assertNotNull(refreshToken);
         assertNotNull(refreshToken.getToken());
-        assertEquals(usuario, refreshToken.getUsuario());
-        assertNotNull(refreshToken.getDataHoraCriacao());
-        assertNotNull(refreshToken.getDataHoraExpiracao());
-        assertTrue(refreshToken.getDataHoraExpiracao().isAfter(refreshToken.getDataHoraCriacao()));
+        assertEquals(user, refreshToken.getUser());
+        assertNotNull(refreshToken.getCreationDateTime());
+        assertNotNull(refreshToken.getExpirationDateTime());
+        assertTrue(refreshToken.getExpirationDateTime().isAfter(refreshToken.getCreationDateTime()));
     }
 
     @Test
-    void deveRenovarTokenComSucesso() {
+    void deveRenovarTokenComSucesso() throws InvalidPasswordlException, InvalidUsernameException, InvalidFullNameException, InvalidEmailException {
         // Arrange
-        Usuario usuario = Usuario.builder()
+        User user = User.builder()
                 .id(1L)
-                .nome("João Silva")
+                .username("joao.silva")
+                .email("joao.silva@email.com")
+                .plainPassword("Senha@123")
+                .name("João Silva")
                 .build();
         
-        RefreshToken refreshToken = RefreshToken.create(usuario);
+        RefreshToken refreshToken = RefreshToken.create(user);
         String tokenAntigo = refreshToken.getToken();
-        LocalDateTime dataExpiracaoAntiga = refreshToken.getDataHoraExpiracao();
+        LocalDateTime dataExpiracaoAntiga = refreshToken.getExpirationDateTime();
 
         // Act
         refreshToken.renovarToken();
 
         // Assert
         assertNotEquals(tokenAntigo, refreshToken.getToken());
-        assertTrue(refreshToken.getDataHoraExpiracao().isAfter(dataExpiracaoAntiga));
+        assertTrue(refreshToken.getExpirationDateTime().isAfter(dataExpiracaoAntiga));
     }
 
     @Test
-    void deveRetornarTempoMaximoDuracaoCorretamente() {
+    void deveRetornarTempoMaximoDuracaoCorretamente() throws InvalidPasswordlException, InvalidUsernameException, InvalidFullNameException, InvalidEmailException {
         // Arrange
-        Usuario usuario = Usuario.builder()
+        User user = User.builder()
                 .id(1L)
-                .nome("João Silva")
+                .username("joao.silva")
+                .email("joao.silva@email.com")
+                .plainPassword("Senha@123")
+                .name("João Silva")
                 .build();
         
-        RefreshToken refreshToken = RefreshToken.create(usuario);
+        RefreshToken refreshToken = RefreshToken.create(user);
 
         // Act
         long tempoMaximo = refreshToken.getTempoMaximoDuracaoSegundos();
@@ -66,19 +77,22 @@ class RefreshTokenTest {
     }
 
     @Test
-    void deveCriarRefreshTokenComDataHoraExpiracaoCorreta() {
+    void deveCriarRefreshTokenComDataHoraExpiracaoCorreta() throws InvalidPasswordlException, InvalidUsernameException, InvalidFullNameException, InvalidEmailException {
         // Arrange
-        Usuario usuario = Usuario.builder()
+        User user = User.builder()
                 .id(1L)
-                .nome("João Silva")
+                .username("joao.silva")
+                .email("joao.silva@email.com")
+                .plainPassword("Senha@123")
+                .name("João Silva")
                 .build();
 
         // Act
-        RefreshToken refreshToken = RefreshToken.create(usuario);
-        LocalDateTime dataHoraExpiracao = refreshToken.getDataHoraExpiracao();
-        LocalDateTime dataHoraCriacao = refreshToken.getDataHoraCriacao();
+        RefreshToken refreshToken = RefreshToken.create(user);
+        LocalDateTime dataHoraExpiracao = refreshToken.getExpirationDateTime();
+        LocalDateTime dataHoraCriacao = refreshToken.getCreationDateTime();
 
         // Assert
-        assertEquals(30, dataHoraCriacao.getMinute() - dataHoraExpiracao.getMinute());
+        assertEquals(30, dataHoraExpiracao.getMinute() - dataHoraCriacao.getMinute());
     }
 }

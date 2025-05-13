@@ -1,9 +1,9 @@
 package br.com.familyfinance.autenticador.domain.exception;
 
-import br.com.familyfinance.arquitetura.domain.exception.BusinessException;
+import br.dev.paulocarvalho.arquitetura.domain.exception.BusinessException;
 
 public class SenhaInvalidaException extends BusinessException {
     public SenhaInvalidaException() {
-        super(AutenticadorErrorCodeEnum.CREDENCIAIS_INVALIDAS, "Senha inválida");
+        super(AutenticadorErrorCodeEnum.INVALID_CREDENTIALS, "Senha inválida");
     }
 }
