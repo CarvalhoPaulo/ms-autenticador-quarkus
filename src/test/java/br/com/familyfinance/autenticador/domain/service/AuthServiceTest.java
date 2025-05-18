@@ -2,15 +2,11 @@ package br.com.familyfinance.autenticador.domain.service;
 
 import br.com.familyfinance.autenticador.application.dto.LoginDTO;
 import br.com.familyfinance.autenticador.application.dto.TokenDTO;
-import br.com.familyfinance.autenticador.domain.exception.InvalidEmailException;
-import br.com.familyfinance.autenticador.domain.exception.InvalidFullNameException;
-import br.com.familyfinance.autenticador.domain.exception.InvalidPasswordlException;
-import br.com.familyfinance.autenticador.domain.exception.InvalidUsernameException;
-import br.com.familyfinance.autenticador.domain.model.RefreshToken;
-import br.com.familyfinance.autenticador.domain.model.User;
 import br.com.familyfinance.autenticador.domain.service.impl.AuthServiceImpl;
 import br.com.familyfinance.autenticador.shared.utils.JwtUtil;
-import io.quarkus.elytron.security.common.BcryptUtil;
+import br.dev.paulocarvalho.arquitetura.domain.exception.BusinessException;
+import br.dev.paulocarvalho.autenticador.domain.model.RefreshToken;
+import br.dev.paulocarvalho.autenticador.domain.model.User;
 import io.smallrye.jwt.build.Jwt;
 import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +26,7 @@ import static org.mockito.Mockito.when;
 class AuthServiceTest {
 
     @Mock
-    private UsuarioService usuarioService;
+    private UserService userService;
 
     @Mock
     private RefreshTokenService refreshTokenService;
@@ -55,10 +51,10 @@ class AuthServiceTest {
     }
 
     @Test
-    void deveAutenticarUsuarioComSucesso() throws InvalidPasswordlException, InvalidUsernameException, InvalidFullNameException, InvalidEmailException {
+    void deveAutenticarUserComSucesso() throws BusinessException {
         // Arrange
-        String email = "usuario.teste@email.com";
-        String username = "usuario.teste";
+        String email = "user.teste@email.com";
+        String username = "user.teste";
         String senha = "Senha@123";
         String name = "Nome Completo";
 
@@ -67,12 +63,12 @@ class AuthServiceTest {
                 .name(name)
                 .email(email)
                 .username(username)
-                .plainPassword(senha)
+                .password(senha)
                 .build();
 
         RefreshToken refreshToken = RefreshToken.create(user);
 
-        when(usuarioService.findByUsername(username))
+        when(userService.findByUsername(username))
                 .thenReturn(Uni.createFrom().item(user));
         when(refreshTokenService.createRefreshToken(user))
                 .thenReturn(Uni.createFrom().item(refreshToken));
@@ -90,7 +86,7 @@ class AuthServiceTest {
             assertNotNull(response.getRefreshToken());
         });
 
-        verify(usuarioService).findByUsername(username);
+        verify(userService).findByUsername(username);
         verify(refreshTokenService).createRefreshToken(user);
     }
 }

@@ -1,11 +1,12 @@
 package br.com.familyfinance.autenticador.domain.service.impl;
 
-import br.com.familyfinance.autenticador.domain.exception.RefreshTokenExpiradoException;
-import br.com.familyfinance.autenticador.domain.exception.RefreshTokenNaoEncontradoException;
-import br.com.familyfinance.autenticador.domain.model.RefreshToken;
-import br.com.familyfinance.autenticador.domain.model.User;
 import br.com.familyfinance.autenticador.domain.repository.RefreshTokenRepository;
 import br.com.familyfinance.autenticador.domain.service.RefreshTokenService;
+import br.dev.paulocarvalho.arquitetura.domain.exception.BusinessException;
+import br.dev.paulocarvalho.autenticador.domain.exception.RefreshTokenExpiradoException;
+import br.dev.paulocarvalho.autenticador.domain.exception.RefreshTokenNaoEncontradoException;
+import br.dev.paulocarvalho.autenticador.domain.model.RefreshToken;
+import br.dev.paulocarvalho.autenticador.domain.model.User;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.unchecked.Unchecked;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -21,8 +22,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     RefreshTokenRepository repository;
 
     @Override
-    public Uni<RefreshToken> createRefreshToken(User usuario) {
-        return repository.inserir(getNovoRefreshToken(usuario));
+    public Uni<RefreshToken> createRefreshToken(User user) throws BusinessException {
+        return repository.inserir(getNovoRefreshToken(user));
     }
 
     @Override
@@ -46,7 +47,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 });
     }
 
-    private static RefreshToken getNovoRefreshToken(User usuario) {
-        return RefreshToken.create(usuario);
+    private static RefreshToken getNovoRefreshToken(User user) {
+        return RefreshToken.create(user);
     }
 }

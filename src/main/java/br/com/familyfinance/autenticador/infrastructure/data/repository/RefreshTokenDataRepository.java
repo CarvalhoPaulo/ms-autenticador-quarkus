@@ -1,7 +1,8 @@
 package br.com.familyfinance.autenticador.infrastructure.data.repository;
 
-import br.com.familyfinance.arquitetura.infrastructure.data.repository.AbstractDataRepository;
-import br.com.familyfinance.autenticador.domain.model.RefreshToken;
+
+import br.dev.paulocarvalho.arquitetura.infrastructure.data.repository.AbstractDataRepository;
+import br.dev.paulocarvalho.autenticador.domain.model.RefreshToken;
 import br.com.familyfinance.autenticador.domain.repository.RefreshTokenRepository;
 import br.com.familyfinance.autenticador.infrastructure.data.RefreshTokenData;
 import br.com.familyfinance.autenticador.infrastructure.mapper.RefreshTokenMapper;

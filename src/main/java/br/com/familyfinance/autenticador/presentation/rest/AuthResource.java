@@ -1,10 +1,10 @@
 package br.com.familyfinance.autenticador.presentation.rest;
 
-import br.com.familyfinance.arquitetura.application.dto.MetaDTO;
-import br.com.familyfinance.arquitetura.application.dto.ResponseDTO;
 import br.com.familyfinance.autenticador.application.dto.LoginDTO;
 import br.com.familyfinance.autenticador.application.dto.TokenDTO;
 import br.com.familyfinance.autenticador.domain.service.AuthService;
+import br.dev.paulocarvalho.arquitetura.application.dto.MetaDTO;
+import br.dev.paulocarvalho.arquitetura.application.dto.ResponseDTO;
 import br.dev.paulocarvalho.arquitetura.application.exception.ApplicationErrorCodeEnum;
 import br.dev.paulocarvalho.arquitetura.application.exception.ApplicationException;
 import br.dev.paulocarvalho.arquitetura.domain.exception.BusinessException;

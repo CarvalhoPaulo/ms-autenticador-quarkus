@@ -1,11 +1,10 @@
 package br.com.familyfinance.autenticador.application.dto;
 
-import lombok.Builder;
-import org.eclipse.microprofile.openapi.annotations.media.ExampleObject;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 @Getter
 @Setter
@@ -14,14 +13,16 @@ import lombok.Setter;
 public class LoginDTO {
     @Schema(
             description = "Nome de usuário",
-            required = true
+            required = true,
+            examples = {"user.name"}
     )
     @NotBlank
     private String username;
 
     @Schema(
             description = "Senha do usuário",
-            required = true
+            required = true,
+            examples = {"passwordXPTO"}
     )
     @NotBlank
     private String password;

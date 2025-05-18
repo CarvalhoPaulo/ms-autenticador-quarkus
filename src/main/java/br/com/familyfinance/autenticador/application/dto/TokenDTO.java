@@ -1,13 +1,13 @@
 package br.com.familyfinance.autenticador.application.dto;
 
-import br.com.familyfinance.arquitetura.application.dto.DTO;
-import br.com.familyfinance.autenticador.domain.model.RefreshToken;
+import br.dev.paulocarvalho.autenticador.domain.model.RefreshToken;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import br.dev.paulocarvalho.arquitetura.application.dto.DTO;
 
 @Getter
 @Setter

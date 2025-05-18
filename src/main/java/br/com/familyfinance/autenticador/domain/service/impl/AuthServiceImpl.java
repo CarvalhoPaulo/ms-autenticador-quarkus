@@ -2,11 +2,11 @@ package br.com.familyfinance.autenticador.domain.service.impl;
 
 import br.com.familyfinance.autenticador.application.dto.LoginDTO;
 import br.com.familyfinance.autenticador.application.dto.TokenDTO;
-import br.com.familyfinance.autenticador.domain.exception.CredenciasNaoInformadasException;
-import br.com.familyfinance.autenticador.domain.model.RefreshToken;
+import br.dev.paulocarvalho.autenticador.domain.exception.CredenciasNaoInformadasException;
+import br.dev.paulocarvalho.autenticador.domain.model.RefreshToken;
 import br.com.familyfinance.autenticador.domain.service.AuthService;
 import br.com.familyfinance.autenticador.domain.service.RefreshTokenService;
-import br.com.familyfinance.autenticador.domain.service.UsuarioService;
+import br.com.familyfinance.autenticador.domain.service.UserService;
 import br.com.familyfinance.autenticador.shared.utils.JwtUtil;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.unchecked.Unchecked;
@@ -17,7 +17,7 @@ import jakarta.inject.Inject;
 public class AuthServiceImpl implements AuthService {
 
     @Inject
-    UsuarioService usuarioService;
+    UserService userService;
 
     @Inject
     JwtUtil jwtUtil;
@@ -31,11 +31,11 @@ public class AuthServiceImpl implements AuthService {
             return Uni.createFrom().failure(new CredenciasNaoInformadasException());
         }
 
-        return usuarioService.findByUsername(loginDTO.getUsername())
+        return userService.findByUsername(loginDTO.getUsername())
                 .onItem()
                 .transform(Unchecked.function(user -> user.checkPassword(loginDTO.getPassword())))
                 .onItem()
-                .transformToUni(usuario -> refreshTokenService.createRefreshToken(usuario))
+                .transformToUni(Unchecked.function(user -> refreshTokenService.createRefreshToken(user)))
                 .onItem()
                 .transform(this::gerarTokenResposta);
     }

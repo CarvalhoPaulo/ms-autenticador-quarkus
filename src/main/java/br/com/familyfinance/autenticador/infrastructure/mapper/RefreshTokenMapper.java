@@ -1,6 +1,6 @@
 package br.com.familyfinance.autenticador.infrastructure.mapper;
 
-import br.com.familyfinance.autenticador.domain.model.RefreshToken;
+import br.dev.paulocarvalho.autenticador.domain.model.RefreshToken;
 import br.com.familyfinance.autenticador.infrastructure.data.RefreshTokenData;
 import br.dev.paulocarvalho.arquitetura.domain.mapper.AbstractModelMapper;
 import org.mapstruct.Mapper;

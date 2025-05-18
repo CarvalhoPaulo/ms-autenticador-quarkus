@@ -1,15 +1,15 @@
 package br.com.familyfinance.autenticador.domain.service.impl;
 
-import br.com.familyfinance.autenticador.domain.exception.UserNotRegistredException;
-import br.com.familyfinance.autenticador.domain.model.User;
+import br.dev.paulocarvalho.autenticador.domain.exception.UserNotRegistredException;
+import br.dev.paulocarvalho.autenticador.domain.model.User;
 import br.com.familyfinance.autenticador.domain.repository.UserRepository;
-import br.com.familyfinance.autenticador.domain.service.UsuarioService;
+import br.com.familyfinance.autenticador.domain.service.UserService;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class UsuarioServiceImpl implements UsuarioService {
+public class UserServiceImpl implements UserService {
 
     @Inject
     UserRepository userRepository;

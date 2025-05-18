@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.com.familyfinance</groupId>
     <artifactId>lib-autenticador-quarkus</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
         <compiler-plugin.version>3.14.0</compiler-plugin.version>
@@ -13,12 +13,13 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.21.1</quarkus.platform.version>
+        <quarkus.platform.version>3.22.1</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.2</surefire-plugin.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <lombok.version>1.18.38</lombok.version>
-        <ms-arquitetura.version>1.0.0-SNAPSHOT</ms-arquitetura.version>
+        <lib-arquitetura-quarkus.version>1.0.0-SNAPSHOT</lib-arquitetura-quarkus.version>
+        <lib-autenticador-core.version>1.0.0-SNAPSHOT</lib-autenticador-core.version>
     </properties>
 
     <dependencyManagement>
@@ -74,10 +75,6 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-jwt-build</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-elytron-security</artifactId>
-        </dependency>
 
         <!-- Dependências de Banco de dados -->
         <dependency>
@@ -107,9 +104,14 @@
             <version>3.17.0</version>
         </dependency>
         <dependency>
-            <groupId>br.com.familyfinance</groupId>
+            <groupId>br.dev.paulocarvalho</groupId>
             <artifactId>lib-arquitetura-quarkus</artifactId>
-            <version>${ms-arquitetura.version}</version>
+            <version>${lib-arquitetura-quarkus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>br.dev.paulocarvalho</groupId>
+            <artifactId>lib-autenticador-core</artifactId>
+            <version>${lib-autenticador-core.version}</version>
         </dependency>
 
         <!-- Dependências de Teste -->
