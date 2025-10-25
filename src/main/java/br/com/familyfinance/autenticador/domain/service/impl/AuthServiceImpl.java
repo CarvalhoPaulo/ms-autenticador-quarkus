@@ -2,7 +2,7 @@ package br.com.familyfinance.autenticador.domain.service.impl;
 
 import br.com.familyfinance.autenticador.application.dto.LoginDTO;
 import br.com.familyfinance.autenticador.application.dto.TokenDTO;
-import br.dev.paulocarvalho.autenticador.domain.exception.CredenciasNaoInformadasException;
+import br.dev.paulocarvalho.autenticador.domain.exception.CredentialsNotFoundException;
 import br.dev.paulocarvalho.autenticador.domain.model.RefreshToken;
 import br.com.familyfinance.autenticador.domain.service.AuthService;
 import br.com.familyfinance.autenticador.domain.service.RefreshTokenService;
@@ -28,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Uni<TokenDTO> login(LoginDTO loginDTO) {
         if (loginDTO == null || loginDTO.getUsername() == null || loginDTO.getPassword() == null) {
-            return Uni.createFrom().failure(new CredenciasNaoInformadasException());
+            return Uni.createFrom().failure(new CredentialsNotFoundException());
         }
 
         return userService.findByUsername(loginDTO.getUsername())

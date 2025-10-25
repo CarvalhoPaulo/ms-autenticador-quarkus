@@ -23,7 +23,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     public Uni<RefreshToken> createRefreshToken(User user) throws BusinessException {
-        return repository.inserir(getNovoRefreshToken(user));
+        return repository.create(getNovoRefreshToken(user));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                 .onItem()
                 .transformToUni(refreshToken -> {
                     refreshToken.renovarToken();
-                    return repository.alterar(refreshToken);
+                    return repository.update(refreshToken);
                 });
     }
 
