@@ -1,9 +1,10 @@
 package br.com.familyfinance.autenticador.domain.repository;
 
-import br.dev.paulocarvalho.arquitetura.domain.repository.BaseRepository;
+import br.dev.paulocarvalho.arquitetura.domain.exception.BusinessException;
 import br.dev.paulocarvalho.autenticador.domain.model.User;
-import io.smallrye.mutiny.Uni;
 
-public interface UserRepository extends BaseRepository<User, Long> {
-    Uni<User> findByUsername(String email);
+import java.util.Optional;
+
+public interface UserRepository {
+    Optional<User> findByUsername(String username) throws BusinessException;
 }

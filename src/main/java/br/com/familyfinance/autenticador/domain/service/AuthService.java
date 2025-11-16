@@ -2,10 +2,13 @@ package br.com.familyfinance.autenticador.domain.service;
 
 import br.com.familyfinance.autenticador.application.dto.LoginDTO;
 import br.com.familyfinance.autenticador.application.dto.TokenDTO;
-import io.smallrye.mutiny.Uni;
+import br.dev.paulocarvalho.arquitetura.application.exception.ApplicationException;
+import br.dev.paulocarvalho.arquitetura.domain.exception.BusinessException;
+import br.dev.paulocarvalho.autenticador.domain.exception.CredentialsNotFoundException;
+import br.dev.paulocarvalho.autenticador.domain.exception.PasswordMatchesException;
 
 public interface AuthService {
-    Uni<TokenDTO> login(LoginDTO loginDTO);
+    TokenDTO login(LoginDTO loginDTO) throws BusinessException;
 
-    Uni<TokenDTO> refreshToken(String refreshToken);
+    TokenDTO refreshToken(String refreshToken) throws BusinessException, ApplicationException;
 }

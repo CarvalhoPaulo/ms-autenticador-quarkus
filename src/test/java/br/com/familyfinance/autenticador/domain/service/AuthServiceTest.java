@@ -8,7 +8,6 @@ import br.dev.paulocarvalho.arquitetura.domain.exception.BusinessException;
 import br.dev.paulocarvalho.autenticador.domain.model.RefreshToken;
 import br.dev.paulocarvalho.autenticador.domain.model.User;
 import io.smallrye.jwt.build.Jwt;
-import io.smallrye.mutiny.Uni;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -69,22 +68,20 @@ class AuthServiceTest {
         RefreshToken refreshToken = RefreshToken.create(user);
 
         when(userService.findByUsername(username))
-                .thenReturn(Uni.createFrom().item(user));
+                .thenReturn(user);
         when(refreshTokenService.createRefreshToken(user))
-                .thenReturn(Uni.createFrom().item(refreshToken));
+                .thenReturn(refreshToken);
 
         // Act
-        Uni<TokenDTO> resultado = authService.login(LoginDTO.builder()
+        TokenDTO resultado = authService.login(LoginDTO.builder()
                 .username(username)
                 .password(senha)
                 .build());
 
         // Assert
-        resultado.subscribe().with(response -> {
-            assertNotNull(response);
-            assertNotNull(response.getAccessToken());
-            assertNotNull(response.getRefreshToken());
-        });
+        assertNotNull(resultado);
+        assertNotNull(resultado.getAccessToken());
+        assertNotNull(resultado.getRefreshToken());
 
         verify(userService).findByUsername(username);
         verify(refreshTokenService).createRefreshToken(user);

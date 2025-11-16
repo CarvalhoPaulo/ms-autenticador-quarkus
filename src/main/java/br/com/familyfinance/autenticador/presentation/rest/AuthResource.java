@@ -8,14 +8,12 @@ import br.dev.paulocarvalho.arquitetura.application.dto.ResponseDTO;
 import br.dev.paulocarvalho.arquitetura.application.exception.ApplicationErrorCodeEnum;
 import br.dev.paulocarvalho.arquitetura.application.exception.ApplicationException;
 import br.dev.paulocarvalho.arquitetura.domain.exception.BusinessException;
-import io.quarkus.hibernate.reactive.panache.common.WithTransaction;
-import io.smallrye.mutiny.Uni;
-import io.vertx.core.http.Cookie;
-import io.vertx.ext.web.RoutingContext;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
@@ -42,26 +40,27 @@ public class AuthResource {
             responseCode = "401",
             description = "Credenciais inválidas"
     )
-    @WithTransaction
+    @Transactional
     @Operation(summary = "Login do usuário", description = "Recebe credenciais e retorna um token de acesso JWT")
-    public Uni<ResponseDTO<TokenDTO, MetaDTO>> login(
+    public Response login(
             @RequestBody(
                     description = "Credenciais do usuário",
                     required = false
             )
-            LoginDTO loginDTO,
-            @Context
-            RoutingContext ctx) {
-        return authService.login(loginDTO)
-                .onItem()
-                .transform(tokenDTO -> adicionarRefreshTokenCookie(ctx, tokenDTO))
-                .onItem()
-                .transform(tokenDto -> ResponseDTO.<TokenDTO, MetaDTO>builder()
-                        .data(tokenDto)
-                        .meta(MetaDTO.of(LocalDateTime.now()))
-                        .build())
-                .onFailure(ex -> !(ex.getCause() instanceof BusinessException))
-                .transform(ex -> new ApplicationException(ApplicationErrorCodeEnum.ERRO_INTERNO, ex));
+            LoginDTO loginDTO) throws ApplicationException, BusinessException {
+        try {
+            TokenDTO tokenDTO = authService.login(loginDTO);
+            ResponseDTO<TokenDTO, MetaDTO> responseDTO = ResponseDTO.<TokenDTO, MetaDTO>builder()
+                    .data(tokenDTO)
+                    .meta(MetaDTO.of(LocalDateTime.now()))
+                    .build();
+            NewCookie refreshTokenCookie = buildRefreshTokenCookie(tokenDTO);
+            return Response.ok(responseDTO).cookie(refreshTokenCookie).build();
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ApplicationException(ApplicationErrorCodeEnum.ERRO_INTERNO, e);
+        }
     }
 
     @POST
@@ -76,26 +75,24 @@ public class AuthResource {
             responseCode = "401",
             description = "Credenciais inválidas"
     )
-    @WithTransaction
-    public Uni<ResponseDTO<TokenDTO, MetaDTO>> refreshToken(
-            @CookieParam("refreshToken") String refreshToken,
-            @Context RoutingContext ctx) {
-        return authService.refreshToken(refreshToken)
-                .onItem()
-                .transform(tokenDTO -> adicionarRefreshTokenCookie(ctx, tokenDTO))
-                .onItem()
-                .transform(tokenDTO -> ResponseDTO.<TokenDTO, MetaDTO>builder()
-                        .meta(MetaDTO.of(LocalDateTime.now()))
-                        .data(tokenDTO)
-                        .build());
+    @Transactional
+    public Response refreshToken(@CookieParam("refreshToken") String refreshToken) throws BusinessException, ApplicationException {
+        TokenDTO tokenDTO = authService.refreshToken(refreshToken);
+        ResponseDTO<TokenDTO, MetaDTO> responseDTO = ResponseDTO.<TokenDTO, MetaDTO>builder()
+                .meta(MetaDTO.of(LocalDateTime.now()))
+                .data(tokenDTO)
+                .build();
+        NewCookie newRefreshTokenCookie = buildRefreshTokenCookie(tokenDTO);
+        return Response.ok(responseDTO).cookie(newRefreshTokenCookie).build();
     }
 
-    private TokenDTO adicionarRefreshTokenCookie(RoutingContext ctx, TokenDTO tokenDTO) {
-        ctx.response().addCookie(Cookie.cookie("refreshToken", tokenDTO.getRefreshToken().getToken())
-                .setPath("/")
-                .setHttpOnly(true)
-                .setMaxAge(tokenDTO.getRefreshToken().getTempoMaximoDuracaoSegundos()));
-        return tokenDTO;
+    private NewCookie buildRefreshTokenCookie(TokenDTO tokenDTO) {
+        return new NewCookie.Builder("refreshToken")
+                .value(tokenDTO.getRefreshToken().getToken())
+                .path("/")
+                .httpOnly(true)
+                .maxAge((int) tokenDTO.getRefreshToken().getTempoMaximoDuracaoSegundos())
+                .build();
     }
 
 }

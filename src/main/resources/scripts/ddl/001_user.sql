@@ -1,6 +1,6 @@
 CREATE TABLE "user"
 (
-    id       SERIAL       NOT NULL,
+    id       BIGSERIAL    NOT NULL,
     name     VARCHAR(200) NOT NULL,
     username VARCHAR(200) NOT NULL,
     email    VARCHAR(320) NOT NULL,
